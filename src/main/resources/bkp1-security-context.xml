@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+    <beans:bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy">
+        <beans:constructor-arg>
+            <beans:list>
+                <filter-chain pattern="/**" filters="
+                    securityContextPersistenceFilter,
+                    logoutFilter,
+                    usernamePasswordAuthenticationFilter,
+                    basicAuthenticationFilter,
+                    requestCacheAwareFilter,
+                    securityContextHolderAwareRequestFilter,
+                    anonymousAuthenticationFilter,
+                    sessionManagementFilter,
+                    exceptionTranslationFilter,
+                    filterSecurityInterceptor"
+                />
+            </beans:list>
+        </beans:constructor-arg>
+    </beans:bean>
+
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider>
+            <user-service>
+                <user name="motech" password="motech" authorities="ROLE_USER"/>
+            </user-service>
+        </authentication-provider>
+    </authentication-manager>
+
+</beans:beans>

@@ -7,12 +7,36 @@
         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
     <http auto-config="true">
-        <intercept-url pattern="/welcome*" access="ROLE_USER"/>
-        <form-login login-page="/login" default-target-url="/welcome" authentication-failure-url="/loginfailed" />
-        <logout logout-success-url="/logout" />
+        <intercept-url pattern="/admin/*" access="ROLE_ADMIN"/>
+        <form-login login-page="/login" default-target-url="/welcome" authentication-failure-url="/loginfailed"/>
+        <logout logout-success-url="/logout"/>
+
+        <custom-filter before="FILTER_SECURITY_INTERCEPTOR" ref="motechFIS" />
     </http>
 
-    <authentication-manager>
+
+    <beans:bean id="motechFIS" class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
+        <beans:property name="authenticationManager" ref="authenticationManager"/>
+        <beans:property name="accessDecisionManager" ref="affirmativeBasedAccessDecisionManager"/>
+        <beans:property name="securityMetadataSource">
+            <filter-security-metadata-source lowercase-comparisons="true" request-matcher="ant">
+                <intercept-url pattern="/test*" access="ROLE_ABC"/>
+            </filter-security-metadata-source>
+        </beans:property>
+    </beans:bean>
+
+    <!--<beans:bean id="customSecurityMetadataSource" class="org.motechproject.spike.spring.security.filter.CustomSecurityMetadataSource"/>-->
+
+    <beans:bean id="affirmativeBasedAccessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+        <beans:constructor-arg>
+            <beans:list>
+                <beans:bean id="roleVoter" class="org.springframework.security.access.vote.RoleVoter"/>
+                <beans:bean id="authenticatedVoter" class="org.springframework.security.access.vote.AuthenticatedVoter"/>
+            </beans:list>
+        </beans:constructor-arg>
+    </beans:bean>
+
+    <authentication-manager alias="authenticationManager">
         <authentication-provider>
             <user-service>
                 <user name="motech" password="motech" authorities="ROLE_USER"/>

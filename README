@@ -1,1 +1,4 @@
 Sample Spring security.
+
+
+HttpConfigurationBuilder#createFilterSecurityInterceptor() > Sets the security metadata on FIS filter.
