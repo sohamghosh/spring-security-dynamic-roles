@@ -15,6 +15,16 @@
 <form name='loginform' action="/voucher/j_spring_security_check" method='POST'>
 
     <table>
+        <%
+            String error = (String) request.getAttribute("error");
+            if("true".equals(error)) {
+        %>
+            <tr class="errorblock">
+                <td>Access Denied!!</td>
+            </tr>
+        <%
+            }
+        %>
         <tr>
             <td>Login:</td>
             <td><input type='text' name='j_username' value=''>

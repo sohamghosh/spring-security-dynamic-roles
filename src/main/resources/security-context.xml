@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans:beans xmlns="http://www.springframework.org/schema/security"
-             xmlns:beans="http://www.springframework.org/schema/beans"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:util="http://www.springframework.org/schema/util"
              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-    <http auto-config="true">
-        <intercept-url pattern="/admin/*" access="ROLE_ADMIN"/>
+    <http auto-config="true" access-denied-page="/loginfailed">
         <form-login login-page="/login" default-target-url="/welcome" authentication-failure-url="/loginfailed"/>
         <logout logout-success-url="/logout"/>
-
-        <custom-filter before="FILTER_SECURITY_INTERCEPTOR" ref="motechFIS" />
+        <custom-filter before="FILTER_SECURITY_INTERCEPTOR" ref="motechFilterSecurityInterceptor" />
     </http>
 
 
-    <beans:bean id="motechFIS" class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
+    <beans:bean id="motechFilterSecurityInterceptor" class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
         <beans:property name="authenticationManager" ref="authenticationManager"/>
         <beans:property name="accessDecisionManager" ref="affirmativeBasedAccessDecisionManager"/>
-        <beans:property name="securityMetadataSource">
-            <filter-security-metadata-source lowercase-comparisons="true" request-matcher="ant">
-                <intercept-url pattern="/test*" access="ROLE_ABC"/>
-            </filter-security-metadata-source>
-        </beans:property>
+        <beans:property name="securityMetadataSource" ref="motechSecurityMetadataSource"/>
     </beans:bean>
 
-    <!--<beans:bean id="customSecurityMetadataSource" class="org.motechproject.spike.spring.security.filter.CustomSecurityMetadataSource"/>-->
+    <beans:bean id="motechSecurityMetadataSource" class="org.motechproject.spike.spring.security.filter.MotechSecurityMetadataSource">
+        <beans:constructor-arg>
+            <util:map />
+        </beans:constructor-arg>
+    </beans:bean>
 
     <beans:bean id="affirmativeBasedAccessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
         <beans:constructor-arg>
@@ -39,7 +39,7 @@
     <authentication-manager alias="authenticationManager">
         <authentication-provider>
             <user-service>
-                <user name="motech" password="motech" authorities="ROLE_USER"/>
+                <user name="motech" password="motech" authorities="ROLE_ADMIN"/>
             </user-service>
         </authentication-provider>
     </authentication-manager>
