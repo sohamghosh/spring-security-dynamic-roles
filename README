@@ -1,4 +1,12 @@
-Sample Spring security.
+Spring security example: How do I define the secured URLs within an application dynamically?
 
+#0 http://host:port/voucher/welcome is a secured URL. username/password/role should be motech/motech/ROLE_ADMIN
+#1 Role is read from an external file - <user.home>/.motech/security-db.txt. So create the file and write 'ROLE_ADMIN' into it.
+#2 Try to access the secured URL. You should see the login page. Put the credentials. You should be able to login.
+#3 Modify the security-db.txt file and write 'ROLE_ABC' into it. Logout and try to login. You should NOT be able to login.
+#4 Modify the security-db.txt file and write 'ROLE_ADMIN' into it. Logout and try to login. You should be able to login.
 
-HttpConfigurationBuilder#createFilterSecurityInterceptor() > Sets the security metadata on FIS filter.
+References:
+#1 http://docs.spring.io/spring-security/site/faq.html#faq-dynamic-url-metadata (See: Common “Howto” Requests 1.6)
+#2 http://stackoverflow.com/questions/6893061/how-to-dynamically-decide-intercept-url-access-attribute-value-in-spring-secur
+#3 http://www.codeproject.com/Articles/253901/Getting-Started-Spring-Security

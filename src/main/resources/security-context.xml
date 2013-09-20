@@ -14,7 +14,6 @@
         <custom-filter before="FILTER_SECURITY_INTERCEPTOR" ref="motechFilterSecurityInterceptor" />
     </http>
 
-
     <beans:bean id="motechFilterSecurityInterceptor" class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
         <beans:property name="authenticationManager" ref="authenticationManager"/>
         <beans:property name="accessDecisionManager" ref="affirmativeBasedAccessDecisionManager"/>
